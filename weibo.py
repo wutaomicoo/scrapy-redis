@@ -1,6 +1,3 @@
-﻿import re
-import datetime
-from wechat.items import WechatItem
 import scrapy
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy_redis.spiders import RedisSpider
@@ -25,9 +22,10 @@ class WeiboSpider(RedisSpider):
     }
 
     login_url = 'https://passport.weibo.cn/sso/login'
-
+    #重写start_requests函数，获取cookies
     def start_requests(self):
         print(1)
+        #回调函数parse_login用于登陆，且return的内容加[]
         return [scrapy.Request('https://passport.weibo.cn/signin/login',meta={'cookiejar': 1}, callback=self.parse_login)]
     #若是不重写该函数，则会raise NotImplementError
     def parse(self, response):
@@ -35,6 +33,7 @@ class WeiboSpider(RedisSpider):
     #登陆新浪微博手机网页版
     def parse_login(self,response):
         print ('Preparing login')
+        #利用scrapy中的FormRequest方法提交表单，进行登陆
         return [scrapy.FormRequest('https://passport.weibo.cn/sso/login',
                                   headers=self.head,meta={'cookiejar': response.meta['cookiejar']},
                                   formdata={
@@ -60,7 +59,8 @@ class WeiboSpider(RedisSpider):
     def parse_page(self, response):
         html = response.body
         s = response.url
-        a = response.xpath('//div[@class="ut"]/text()')#获取你的用户名
-        print(a)
+        #获取你的用户名
+        ut = response.xpath('//div[@class="ut"]/text()')
+        print(ut)
         print(s)
         print (html)
