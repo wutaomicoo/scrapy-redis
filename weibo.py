@@ -2,8 +2,7 @@ import scrapy
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy_redis.spiders import RedisSpider
 import redis
-
-
+######需要修改settings.py中 COOKIES_ENABLED = True ，cookiemiddleware需要继续学习 
 r=redis.StrictRedis(host='127.0.0.1',port=6379)
 r.lpush('weibo:start_urls', 'https://weibo.cn')
 class WeiboSpider(RedisSpider):
