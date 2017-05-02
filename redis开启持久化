@@ -1,0 +1,5 @@
+前不久使用redis时，遇到一个问题，python操作redis时总是报错（DISCARD MUTI ERROR），而且redis推出以后不能自动存储，再一次打开后，之前存储的数据消失。
+后来发现是redis没有开启持久化，解决办法是打开redis.windows.config文件找到 appendonly选项，将no 改成yes即可。这个方法打开了redis持久化的aof模式。
+
+
+redis持久化有两种模式，RDB（快照）和AOF（命令存储）
